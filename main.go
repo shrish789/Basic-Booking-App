@@ -7,10 +7,12 @@ func main() {
 	const conferenceTickets int = 50
 	var remainingTickets uint = 50
 
-	fmt.Printf("conferenceTickets is %T, remainingTickets is %T, conferenceName is %T\n", conferenceTickets, remainingTickets, conferenceName)
+	// fmt.Printf("conferenceTickets is %T, remainingTickets is %T, conferenceName is %T\n", conferenceTickets, remainingTickets, conferenceName)
 	fmt.Printf("Welcome to %v booking application\n", conferenceName)
 	fmt.Printf("We have total of %v tickets and %v are still remaining\n", conferenceTickets, remainingTickets)
 	fmt.Println("Get your tickets here to attend")
+
+	var bookings [50]string
 
 	var firstName string
 	var lastName string
@@ -30,6 +32,9 @@ func main() {
 	fmt.Scan(&userTickets)
 
 	remainingTickets -= userTickets
+	bookings[0] = firstName + " " + lastName
+
+	
 
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets are left for %v\n", remainingTickets, conferenceName)
