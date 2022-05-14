@@ -3,13 +3,20 @@ package main
 import (
 	"booking-app/helper"
 	"fmt"
-	"strconv"
 )
+
+type UserData struct {
+	firstName string
+	lastName string
+	email string
+	numberOfTickets uint
+}
 
 var conferenceName string = "Go Conference"
 const conferenceTickets int = 50
 var remainingTickets uint = 50
-var bookings = make([]map[string]string, 0) // this is still a size. The size can automatically increazse or decrease depeending on use-case
+// var bookings = make([]map[string]string, 0) // this is still a size. The size can automatically increazse or decrease depeending on use-case
+var bookings = make([]UserData, 0)
 
 func main() {
 
@@ -61,7 +68,7 @@ func greetUsers() {
 func getFirstNames() []string {
 	firstNames := []string{}
 		for _, booking := range bookings {
-			firstNames = append(firstNames, booking["firstName"])
+			firstNames = append(firstNames, booking.firstName)
 		}
 		return firstNames
 }
@@ -92,15 +99,23 @@ func bookTickets(userTickets uint, firstName string, lastName string, email stri
 	remainingTickets -= userTickets
 
 	// create a map for a user
-	var userData = make(map[string]string) // make is used to create a empty map
-	userData["firstName"] = firstName
-	userData["lastName"] = lastName
-	userData["email"] = email
-	userData["userTickets"] = strconv.FormatUint(uint64(userTickets), 10) // 10 is for decimal type
+	// var userData = make(map[string]string) // make is used to create a empty map
+	
+	var userData = UserData {
+		firstName: firstName,
+		lastName: lastName,
+		email: email,
+		numberOfTickets: userTickets,
+	}
+	
+	// userData["firstName"] = firstName
+	// userData["lastName"] = lastName
+	// userData["email"] = email
+	// userData["userTickets"] = strconv.FormatUint(uint64(userTickets), 10) // 10 is for decimal type
 	
 	bookings = append(bookings, userData)
 	fmt.Printf("Bookings list: %v\n", bookings)
-	
+
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets are left for %v\n", remainingTickets, conferenceName)
 }
