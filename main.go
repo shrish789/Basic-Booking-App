@@ -1,15 +1,15 @@
 package main
 
 import (
-	"fmt"
-	"strings"
 	"booking-app/helper"
+	"fmt"
+	"strconv"
 )
 
 var conferenceName string = "Go Conference"
 const conferenceTickets int = 50
 var remainingTickets uint = 50
-var bookings = []string{}
+var bookings = make([]map[string]string, 0) // this is still a size. The size can automatically increazse or decrease depeending on use-case
 
 func main() {
 
@@ -38,7 +38,7 @@ func main() {
 			continue
 		}
 
-		bookTickets(userTickets, bookings, firstName, lastName, email)
+		bookTickets(userTickets, firstName, lastName, email)
 
 		firstNames := getFirstNames()
 		fmt.Printf("The first names of bookings are: %v\n", firstNames)
@@ -61,8 +61,7 @@ func greetUsers() {
 func getFirstNames() []string {
 	firstNames := []string{}
 		for _, booking := range bookings {
-			var names = strings.Fields(booking)
-			firstNames = append(firstNames, names[0])
+			firstNames = append(firstNames, booking["firstName"])
 		}
 		return firstNames
 }
@@ -89,9 +88,19 @@ func getUserInput() (string, string, string, uint) {
 	return firstName, lastName, email, userTickets
 }
 
-func bookTickets(userTickets uint, bookings []string, firstName string, lastName string, email string) {
+func bookTickets(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets -= userTickets
-	bookings = append(bookings, firstName + " " + lastName)
+
+	// create a map for a user
+	var userData = make(map[string]string) // make is used to create a empty map
+	userData["firstName"] = firstName
+	userData["lastName"] = lastName
+	userData["email"] = email
+	userData["userTickets"] = strconv.FormatUint(uint64(userTickets), 10) // 10 is for decimal type
+	
+	bookings = append(bookings, userData)
+	fmt.Printf("Bookings list: %v\n", bookings)
+	
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets are left for %v\n", remainingTickets, conferenceName)
 }
