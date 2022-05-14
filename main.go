@@ -3,6 +3,7 @@ package main
 import (
 	"booking-app/helper"
 	"fmt"
+	"sync"
 	"time"
 )
 
@@ -12,6 +13,8 @@ type UserData struct {
 	email string
 	numberOfTickets uint
 }
+
+var wg = sync.WaitGroup{}
 
 var conferenceName string = "Go Conference"
 const conferenceTickets int = 50
@@ -47,7 +50,11 @@ func main() {
 		}
 
 		bookTickets(userTickets, firstName, lastName, email)
-		go sendTicket(userTickets, firstName, lastName, email) // writing go infront of a function forces it to run in a different thread
+		wg.Add(1) // adds a thread and tells main thread that 1 more thread is running right now
+		go sendTicket(userTickets, firstName, lastName, email)
+		// writing go infront of a function forces it to run in a different thread.
+		// Actually it is not thread rather its a goroutine which is better than normal kernel threads 
+		// and hence concurrency management is better in GO as compared to other languages
 
 		firstNames := getFirstNames()
 		fmt.Printf("The first names of bookings are: %v\n", firstNames)
@@ -58,6 +65,7 @@ func main() {
 		}
 		// fmt.Printf("These are all our bookings: %v\n", bookings)
 	}
+	wg.Wait() // makes the main thread to wait until all other threads are completed
 }
 
 func greetUsers() {
@@ -128,4 +136,5 @@ func sendTicket(userTickets uint, firstName string, lastName string, email strin
 	fmt.Println("##################")
 	fmt.Printf("Sending ticket: \n%v \nto email address %v\n", ticket, email)
 	fmt.Println("##################")
+	wg.Done() // tells the main thread that one of the side threads is completed
 }
